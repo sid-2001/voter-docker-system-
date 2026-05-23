@@ -1,0 +1,72 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: voter-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  worker1:
+    build: .
+    restart: unless-stopped
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017
+      DB_NAME: srs_database
+      COLLECTION_NAME: srs_2025
+      JOBS_COLLECTION_NAME: srs_pdf_jobs
+      PDF_FOLDER: /data/pdfs
+      LOG_DIR: /data/logs
+      OCR_THREADS: 4
+      WORKER_ID: worker1
+      STALE_SECONDS: 300
+      HEARTBEAT_SECONDS: 30
+    volumes:
+      - ./practical:/data/pdfs
+      - ./logs:/data/logs
+    depends_on:
+      - mongodb
+
+  worker2:
+    build: .
+    restart: unless-stopped
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017
+      DB_NAME: srs_database
+      COLLECTION_NAME: srs_2025
+      JOBS_COLLECTION_NAME: srs_pdf_jobs
+      PDF_FOLDER: /data/pdfs
+      LOG_DIR: /data/logs
+      OCR_THREADS: 4
+      WORKER_ID: worker2
+      STALE_SECONDS: 300
+      HEARTBEAT_SECONDS: 30
+    volumes:
+      - ./practical:/data/pdfs
+      - ./logs:/data/logs
+    depends_on:
+      - mongodb
+
+  worker3:
+    build: .
+    restart: unless-stopped
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017
+      DB_NAME: srs_database
+      COLLECTION_NAME: srs_2025
+      JOBS_COLLECTION_NAME: srs_pdf_jobs
+      PDF_FOLDER: /data/pdfs
+      LOG_DIR: /data/logs
+      OCR_THREADS: 4
+      WORKER_ID: worker3
+      STALE_SECONDS: 300
+      HEARTBEAT_SECONDS: 30
+    volumes:
+      - ./practical:/data/pdfs
+      - ./logs:/data/logs
+    depends_on:
+      - mongodb
+
+volumes:
+  mongo_data:
